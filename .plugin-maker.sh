@@ -229,7 +229,7 @@ __tm-plugin-maker () {
     }
 
     __main () {
-        if [[ "$1" =~ ^[^plugin-][a-z-]+[^-test\n]$ ]]; then
+        if [[ ! "$1" =~ (^(plugin-|-)[a-z-]+)|([a-z-]+(-test|-)$) ]]; then
             __createNames "$1";
 
             read -p "Do you agree with these names? Type 'YES' to proceed = " answer;
