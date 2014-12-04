@@ -160,7 +160,7 @@ __tm-plugin-maker () {
         __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
         mv ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java ./$testProjectName/src/test/java/test/selenium/$moduleTotalCamelName"WebPage.java";
 
-        mkdir ./$testProjectName/src/test/java/$packagePath;
+        mkdir -p ./$testProjectName/src/test/java/$packagePath;
         mv ./$testProjectName/src/test/java/test ./$testProjectName/src/test/java/$packagePath/test;
     }
 
@@ -229,7 +229,7 @@ __tm-plugin-maker () {
     }
 
     __main () {
-        if [[ "$1" =~ ^[^plugin-][a-z-]+[^-test\n]$ ]]; then
+        if [[ ! "$1" == "" && ! "$1" =~ (^(plugin-|-)[a-z-]+)|([a-z-]+(-test|-)$) ]]; then
             __createNames "$1";
 
             read -p "Do you agree with these names? Type 'YES' to proceed = " answer;
@@ -252,15 +252,19 @@ __tm-plugin-maker () {
                 echo "[WARN] THIS STEP CANNOT BE UNDONE !!!";
                 read -p "Type 'YES' to proceed = " answer;
 
-                if [[ "$answer" = "YES" ]]; then
+                if [[ "$answer" == "YES" ]]; then
                     gitURL=https://web.gituol.intranet/tag-manager-plugins/$projectName;
                     echo "";
                     echo "[INFO] The URL of your plugin will be $gitURL";
                     read -p "[?] That's correct? Type 'YES' to proceed = " answer;
                     
-                    if [[ "$answer" = "YES" ]]; then
+                    if [[ "$answer" == "YES" ]]; then
                         __askForAuth;
+                    else
+                        echo "[INFO] The remote repository wasn't created.";
                     fi
+                else
+                    echo "[INFO] The remote repository wasn't created.";
                 fi
 
                 echo "";
