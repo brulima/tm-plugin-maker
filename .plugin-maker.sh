@@ -276,7 +276,7 @@ __tm-plugin-maker () {
             echo "$DIVIDER";
             echo "[Tag Manager Plugin Maker]";
             echo "";
-            echo "Don't need to call your plugin as \"plguin-custom-name\".";
+            echo "Don't need to call your plugin as \"plugin-custom-name\".";
             echo "Just input \"custom-name\" and let us do the rest.";
             echo "$DIVIDER";
         fi
