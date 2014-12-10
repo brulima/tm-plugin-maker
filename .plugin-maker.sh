@@ -32,6 +32,7 @@ __tm-plugin-maker () {
     moduleCompactName=''; # dynadtrack ===> {{moduleCompactName}}
     moduleCamelName=''; # dynadTrack ===> {{moduleCamelName}}
     moduleTotalCamelName=''; # DynadTrack ===> {{moduleTotalCamelName}}
+    moduleWebPageName=''; # DynadTrackWebPage ===> {{moduleWebPageName}}
 
     moduleNameToken='{{moduleName}}';
     projectNameToken='{{projectName}}'; 
@@ -39,6 +40,7 @@ __tm-plugin-maker () {
     moduleCompactNameToken='{{moduleCompactName}}'; 
     moduleCamelNameToken='{{moduleCamelName}}'; 
     moduleTotalCamelNameToken='{{moduleTotalCamelName}}';
+    moduleWebPageNameToken='{{moduleWebPageNameToken}}';
 
     authLimiter=0;
 
@@ -61,6 +63,11 @@ __tm-plugin-maker () {
     __createPackageName () {
         packageName=`echo $1 | tr "-" "."`;
         modulePackageName=$packageName;
+    }
+
+    __createWebPageName () {
+        WEB_PAGE="WebPage";
+        moduleWebPageName="$moduleTotalCamelName$WEB_PAGE";
     }
 
     __createCamelName () {
@@ -95,6 +102,7 @@ __tm-plugin-maker () {
         __createPackageName $1;
         __createCamelName $1 false;
         __createCamelName $1 true;
+        __createWebPageName;
 
         echo "$DIVIDER";
         echo "[Tag Manager Plugin Maker]";
@@ -112,7 +120,7 @@ __tm-plugin-maker () {
     __clone_project () {
         mkdir "$1" && cd "$1";
         git clone https://gituol.intranet/git/tag-manager-plugins/plugin-maker.git;
-        cp -Rnf plugin-maker/ ./;
+        cp -rf plugin-maker/* ./;
         rm -rf plugin-maker/;
         rm -rf .git/;
 
@@ -143,6 +151,23 @@ __tm-plugin-maker () {
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$testProjectName/src/test/resources/html/show-version.js;
         mv ./$testProjectName/src/test/resources/html/plugin.html ./$testProjectName/src/test/resources/html/$projectName".html";
 
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/config/SpringConfig.java;
+
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentStepDefs.java;
+        __replaceTextInFile $moduleWebPageNameToken $moduleWebPageName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentStepDefs.java;
+
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentTest.java;
+        
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/feature/Stepdefs.java;
+        
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/selenium/AbstractWebPage.java;
+        
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
+        __replaceTextInFile $moduleWebPageNameToken $moduleWebPageName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
+        __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
+        
+        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/suite/EnvironmentTestSuite.java;
+        
         __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/resources/remote-test.properties;
 
         packagePath="";
@@ -157,7 +182,6 @@ __tm-plugin-maker () {
         __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/feature/Stepdefs.java;
         __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentTest.java;
 
-        __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
         mv ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java ./$testProjectName/src/test/java/test/selenium/$moduleTotalCamelName"WebPage.java";
 
         mkdir -p ./$testProjectName/src/test/java/$packagePath;
@@ -168,8 +192,12 @@ __tm-plugin-maker () {
         __replaceTextInFile $projectNameToken $projectName ./$projectName/pom.xml
         mv ./$projectName/src/test/js/uolpd/tagmanager/plugin ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName
 
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.html
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.js
         __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.html
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.js
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.html
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.js
 
         __replaceTextInFile $moduleCamelNameToken $moduleCamelName ./$projectName/src/main/resources/grunt/Gruntfile.js
         __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/main/resources/grunt/Gruntfile.js
@@ -209,7 +237,7 @@ __tm-plugin-maker () {
         auth=`curl -G -s -k -u $1:$2 https://web.gituol.intranet/tag-manager-plugins/ | grep 401`;
         authLimiter=$(( authLimiter + 1 ));
 
-        if [[ ! "$auth" =~ "401" ]]; then
+        if  !(echo "$auth" | grep -E '^401$'); then
             echo "[SUCCESS] Success during authentication from $1";
             authLimiter=0;
 
@@ -229,7 +257,7 @@ __tm-plugin-maker () {
     }
 
     __main () {
-        if [[ ! "$1" == "" && ! "$1" =~ (^(plugin-|-)[a-z-]+)|([a-z-]+(-test|-)$) ]]; then
+        if !(echo "$1" | grep -E '^((plugin-|-)[a-z-]+)|([a-z-]+(-test|-))$'); then
             __createNames "$1";
 
             read -p "Do you agree with these names? Type 'YES' to proceed = " answer;
