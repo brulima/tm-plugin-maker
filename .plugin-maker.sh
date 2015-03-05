@@ -35,10 +35,10 @@ __tm-plugin-maker () {
     moduleWebPageName=''; # DynadTrackWebPage ===> {{moduleWebPageName}}
 
     moduleNameToken='{{moduleName}}';
-    projectNameToken='{{projectName}}'; 
+    projectNameToken='{{projectName}}';
     modulePackageNameToken='{{packageName}}';
-    moduleCompactNameToken='{{moduleCompactName}}'; 
-    moduleCamelNameToken='{{moduleCamelName}}'; 
+    moduleCompactNameToken='{{moduleCompactName}}';
+    moduleCamelNameToken='{{moduleCamelName}}';
     moduleTotalCamelNameToken='{{moduleTotalCamelName}}';
     moduleWebPageNameToken='{{moduleWebPageNameToken}}';
 
@@ -82,7 +82,7 @@ __tm-plugin-maker () {
             else
                 name="$(tr '[:lower:]' '[:upper:]' <<< ${name:0:1})${name:1}";
                 camelName="$camelName$name";
-            fi        
+            fi
         done
 
         if [ $2 = true ]; then # create a full camel name. e.g. FullCamelName
@@ -90,7 +90,7 @@ __tm-plugin-maker () {
             moduleTotalCamelName=$camelName;
         else
             moduleCamelName=$camelName;
-        fi    
+        fi
     }
 
     __createNames () {
@@ -107,12 +107,12 @@ __tm-plugin-maker () {
         echo "$DIVIDER";
         echo "[Tag Manager Plugin Maker]";
         echo "";
-        echo "The followiing name will be used: "; 
-        echo "Project Name:                 "$projectName;  
-        echo "Module Compact Name:          "$moduleCompactName;  
-        echo "Module Package Name:          "$modulePackageName;  
-        echo "Module Camel Name:            "$moduleCamelName;  
-        echo "Module Total Camel Name:      "$moduleTotalCamelName;  
+        echo "The followiing name will be used: ";
+        echo "Project Name:                 "$projectName;
+        echo "Module Compact Name:          "$moduleCompactName;
+        echo "Module Package Name:          "$modulePackageName;
+        echo "Module Camel Name:            "$moduleCamelName;
+        echo "Module Total Camel Name:      "$moduleTotalCamelName;
         echo "$DIVIDER";
         echo "";
     }
@@ -137,80 +137,29 @@ __tm-plugin-maker () {
         rm -rf $3.bak;
     }
 
-    __adjustRootFolder(){
-        mv ./plugin ./$projectName
-        mv ./plugin-test ./$testProjectName
+    __adjustProjectFolder(){
         __replaceTextInFile $projectNameToken $projectName ./pom.xml
-    }
+        mv ./src/test/js/uolpd/tagmanager/plugin ./src/test/js/uolpd/tagmanager/$moduleCompactName
 
-    __adjustTestFolder () {
-        __replaceTextInFile $projectNameToken $projectName ./$testProjectName/pom.xml;
-        mv ./$testProjectName/src/test/resources/scripts/plugin-test.sh ./$testProjectName/src/test/resources/scripts/$testProjectName".sh";
-        
-        __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/resources/html/plugin.html;
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$testProjectName/src/test/resources/html/show-version.js;
-        mv ./$testProjectName/src/test/resources/html/plugin.html ./$testProjectName/src/test/resources/html/$projectName".html";
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.html
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.js
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.html
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.js
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.html
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.js
 
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/config/SpringConfig.java;
+        __replaceTextInFile $moduleCamelNameToken $moduleCamelName ./src/main/resources/grunt/Gruntfile.js
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/main/resources/grunt/Gruntfile.js
+        __replaceTextInFile $moduleNameToken $moduleName ./src/main/resources/grunt/Gruntfile.js
 
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentStepDefs.java;
-        __replaceTextInFile $moduleWebPageNameToken $moduleWebPageName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentStepDefs.java;
-
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentTest.java;
-        
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/feature/Stepdefs.java;
-        
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/selenium/AbstractWebPage.java;
-        
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
-        __replaceTextInFile $moduleWebPageNameToken $moduleWebPageName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
-        __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java;
-        
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/java/test/suite/EnvironmentTestSuite.java;
-        
-        __replaceTextInFile $modulePackageNameToken $modulePackageName ./$testProjectName/src/test/resources/remote-test.properties;
-
-        packagePath="";
-        for name in ${names[@]}; do
-            if [[ ! $name == ${names[$(( ${#names[@]} -1 ))]} ]]; then
-                packagePath=$packagePath$name"/";
-            else
-                packagePath=$packagePath$name;
-            fi
-        done;
-
-        __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/feature/Stepdefs.java;
-        __replaceTextInFile $moduleNameToken $moduleName ./$testProjectName/src/test/java/test/feature/environment/EnvironmentTest.java;
-
-        mv ./$testProjectName/src/test/java/test/selenium/PluginWebPage.java ./$testProjectName/src/test/java/test/selenium/$moduleTotalCamelName"WebPage.java";
-
-        mkdir -p ./$testProjectName/src/test/java/$packagePath;
-        mv ./$testProjectName/src/test/java/test ./$testProjectName/src/test/java/$packagePath/test;
-    }
-
-    __adjustProjectFolder(){    
-        __replaceTextInFile $projectNameToken $projectName ./$projectName/pom.xml
-        mv ./$projectName/src/test/js/uolpd/tagmanager/plugin ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName
-
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.html
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.js
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.html
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.js
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.html
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.js
-
-        __replaceTextInFile $moduleCamelNameToken $moduleCamelName ./$projectName/src/main/resources/grunt/Gruntfile.js
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/main/resources/grunt/Gruntfile.js
-        __replaceTextInFile $moduleNameToken $moduleName ./$projectName/src/main/resources/grunt/Gruntfile.js
-
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./$projectName/src/main/resources/grunt/karma.conf.js
+        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/main/resources/grunt/karma.conf.js
 
 
-        mv ./$projectName/src/main/js/uolpd/tagmanager/plugin ./$projectName/src/main/js/uolpd/tagmanager/$moduleCompactName
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/main/js/uolpd/tagmanager/$moduleCompactName/init.js
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/main/js/uolpd/tagmanager/$moduleCompactName/Logs.js
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/main/js/uolpd/tagmanager/$moduleCompactName/NameSpace.js
-        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./$projectName/src/main/js/uolpd/tagmanager/$moduleCompactName/TypeValidator.js
+        mv ./src/main/js/uolpd/tagmanager/plugin ./src/main/js/uolpd/tagmanager/$moduleCompactName
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/main/js/uolpd/tagmanager/$moduleCompactName/init.js
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/main/js/uolpd/tagmanager/$moduleCompactName/Logs.js
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/main/js/uolpd/tagmanager/$moduleCompactName/NameSpace.js
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/main/js/uolpd/tagmanager/$moduleCompactName/TypeValidator.js
     }
 
     __createGitRepository () {
@@ -266,10 +215,6 @@ __tm-plugin-maker () {
             then
                 echo "[INFO] Downloading the plugin template."
                 __clone_project "$projectName";
-                echo "[INFO] Preparing root folder...";
-                __adjustRootFolder;
-                echo "[INFO] Preparing test folder...";
-                __adjustTestFolder;
                 echo "[INFO] Preparing project folder...";
                 __adjustProjectFolder;
 
@@ -285,7 +230,7 @@ __tm-plugin-maker () {
                     echo "";
                     echo "[INFO] The URL of your plugin will be $gitURL";
                     read -p "[?] That's correct? Type 'YES' to proceed = " answer;
-                    
+
                     if [[ "$answer" == "YES" ]]; then
                         __askForAuth;
                     else
