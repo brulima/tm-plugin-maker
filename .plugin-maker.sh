@@ -141,12 +141,12 @@ __tm-plugin-maker () {
         __replaceTextInFile $projectNameToken $projectName ./pom.xml
         mv ./src/test/js/uolpd/tagmanager/plugin ./src/test/js/uolpd/tagmanager/$moduleCompactName
 
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.html
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.js
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.html
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.js
-        __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.html
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.js
+
+        __replaceTextInFile $projectNameToken $projectName ./src/main/resources/grunt/package.json
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/main/resources/grunt/package.json
 
         __replaceTextInFile $moduleCamelNameToken $moduleCamelName ./src/main/resources/grunt/Gruntfile.js
         __replaceTextInFile $moduleCompactNameToken $moduleCompactName ./src/main/resources/grunt/Gruntfile.js
