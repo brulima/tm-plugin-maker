@@ -98,13 +98,7 @@ Na conclusão do processo, um projeto com a seguinte estrutura será gerado:
 | | | |____uolpd
 | | | | |____tagmanager
 | | | | | |____featurename
-| | | | | | |____LogsTest.html
 | | | | | | |____LogsTest.js
-| | | | | | |____NameSpaceTest.html
 | | | | | | |____NameSpaceTest.js
-| | | | | | |____TypeValidatorTest.html
 | | | | | | |____TypeValidatorTest.js
-| | |____resources
-| | | |____libs
-| | | | |____jasmine
 ```
