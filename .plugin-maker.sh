@@ -144,6 +144,7 @@ __tm-plugin-maker () {
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/LogsTest.js
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/NameSpaceTest.js
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/js/uolpd/tagmanager/$moduleCompactName/TypeValidatorTest.js
+        __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/test/resources/Assert.js
 
         __replaceTextInFile $projectNameToken $projectName ./src/main/resources/grunt/package.json
         __replaceTextInFile $moduleTotalCamelNameToken $moduleTotalCamelName ./src/main/resources/grunt/package.json
