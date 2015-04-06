@@ -101,4 +101,8 @@ Na conclusão do processo, um projeto com a seguinte estrutura será gerado:
 | | | | | | |____LogsTest.js
 | | | | | | |____NameSpaceTest.js
 | | | | | | |____TypeValidatorTest.js
+| | |____resources
+| | | |____ArrayUtils.js
+| | | |____Assert.js
+| | | |____TestUtils.js
 ```
